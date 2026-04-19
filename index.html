@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SciSniff — Science Misinformation Detector</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     /* HERO */
     .hero {
@@ -22,8 +23,8 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(0,212,255,0.08);
-      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(220,167,250,0.08);
+      border: 1px solid rgba(220,167,250,0.2);
       border-radius: 100px;
       padding: 6px 16px;
       font-size: 12px;
@@ -53,14 +54,14 @@
     }
 
     .hero h1 .highlight {
-      background: linear-gradient(135deg, var(--accent), #6ee7f7);
+      background: linear-gradient(135deg, var(--accent), #F2BDFC);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
     .hero h1 .highlight-red {
-      background: linear-gradient(135deg, var(--false), #ff9eb5);
+      background: linear-gradient(135deg, var(--false), #FCBDC8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -100,7 +101,7 @@
 
     .search-input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0,212,255,0.12), 0 0 40px rgba(0,212,255,0.1);
+      box-shadow: 0 0 0 3px rgba(220,167,250,0.12), 0 0 40px rgba(220,167,250,0.1);
     }
 
     .search-btn {
@@ -121,7 +122,7 @@
     }
 
     .search-btn:hover {
-      box-shadow: 0 0 24px rgba(0,212,255,0.5);
+      box-shadow: 0 0 24px rgba(220,167,250,0.5);
       transform: translateY(-50%) scale(1.02);
     }
 
@@ -147,7 +148,7 @@
     .example-chip:hover {
       border-color: var(--accent);
       color: var(--accent);
-      background: rgba(0,212,255,0.05);
+      background: rgba(220,167,250,0.05);
     }
 
     /* STATS ROW */
@@ -205,9 +206,9 @@
     }
 
     .trending-card:hover {
-      border-color: rgba(0,212,255,0.3);
+      border-color: rgba(220,167,250,0.3);
       transform: translateY(-3px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.3), 0 0 40px rgba(0,212,255,0.08);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3), 0 0 40px rgba(220,167,250,0.08);
     }
 
     .trending-top {
@@ -267,8 +268,8 @@
       width: 48px; height: 48px;
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
       margin-bottom: 18px;
+      display: flex; align-items: center; justify-content: center;
     }
 
     .feature-card h3 {
@@ -433,27 +434,27 @@
 
         <div class="features-grid">
           <div class="feature-card fade-up-3">
-            <div class="feature-icon" style="background:rgba(0,212,255,0.1);">🔍</div>
+            <div class="feature-icon" style="background:rgba(220,167,250,0.1);"><i data-lucide="search"></i></div>
             <h3>Real-Time Claim Scanning</h3>
             <p>We monitor Twitter/X, Reddit, Facebook, and 200+ news outlets in real-time, detecting science claims as they go viral.</p>
           </div>
           <div class="feature-card fade-up-4">
-            <div class="feature-icon" style="background:rgba(57,255,126,0.1);">🧬</div>
+            <div class="feature-icon" style="background:rgba(250,167,239,0.1);"><i data-lucide="dna"></i></div>
             <h3>Verified Source Matching</h3>
             <p>Claims are cross-referenced against PubMed, WHO, CDC, and 180+ peer-reviewed scientific databases automatically.</p>
           </div>
           <div class="feature-card fade-up-5">
-            <div class="feature-icon" style="background:rgba(255,77,109,0.1);">📡</div>
+            <div class="feature-icon" style="background:rgba(250,167,197,0.1);"><i data-lucide="radio"></i></div>
             <h3>Spread Pattern Analysis</h3>
             <p>Using NLP and network analysis, we map how misinformation spreads across platforms, regions, and demographics.</p>
           </div>
           <div class="feature-card fade-up-3">
-            <div class="feature-icon" style="background:rgba(255,179,71,0.1);">📊</div>
+            <div class="feature-icon" style="background:rgba(242,189,252,0.1);"><i data-lucide="bar-chart-2"></i></div>
             <h3>Credibility Scoring</h3>
             <p>Each claim receives a transparent credibility score built from source quality, consensus level, and counter-evidence strength.</p>
           </div>
           <div class="feature-card fade-up-5">
-            <div class="feature-icon" style="background:rgba(57,255,126,0.1);">🔗</div>
+            <div class="feature-icon" style="background:rgba(220,167,250,0.1);"><i data-lucide="link"></i></div>
             <h3>Shareable Results</h3>
             <p>Get a unique link to any fact-check result to easily share verified information back with friends, family, or colleagues.</p>
           </div>
@@ -495,6 +496,7 @@
     }, { threshold: 0.3 });
 
     document.querySelectorAll('.card').forEach(c => observer.observe(c));
+    lucide.createIcons();
   </script>
 </body>
 </html>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SciSniff — Data Sources</title>
   <link rel="stylesheet" href="style.css"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     .sources-page { padding: 60px 0; }
 
@@ -69,7 +70,7 @@
     }
 
     .source-card:hover {
-      border-color: rgba(0,212,255,0.25);
+      border-color: rgba(220,167,250,0.25);
       transform: translateY(-2px);
     }
 
@@ -78,7 +79,7 @@
       align-items: flex-start; margin-bottom: 12px;
     }
 
-    .source-card-icon { font-size: 28px; }
+    .source-card-icon { display: flex; align-items: center; }
 
     .source-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
     .source-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
@@ -138,8 +139,8 @@
     .pipeline-tag {
       margin-top: 12px;
       display: inline-block;
-      background: rgba(0,212,255,0.08);
-      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(220,167,250,0.08);
+      border: 1px solid rgba(220,167,250,0.2);
       border-radius: 6px;
       padding: 4px 10px;
       font-size: 11px;
@@ -150,8 +151,8 @@
 
     /* MISINFORMATION SOURCES */
     .misinfo-sources {
-      background: rgba(255,77,109,0.05);
-      border: 1px solid rgba(255,77,109,0.2);
+      background: rgba(250,167,197,0.05);
+      border: 1px solid rgba(250,167,197,0.2);
       border-radius: 16px;
       padding: 32px;
       margin-bottom: 32px;
@@ -159,11 +160,11 @@
 
     .misinfo-row {
       display: flex; align-items: center; gap: 16px;
-      padding: 14px 0; border-bottom: 1px solid rgba(255,77,109,0.1);
+      padding: 14px 0; border-bottom: 1px solid rgba(250,167,197,0.1);
     }
     .misinfo-row:last-child { border-bottom: none; }
 
-    .misinfo-platform { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+    .misinfo-platform { width: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .misinfo-name { font-weight: 600; font-size: 14px; flex: 1; }
     .misinfo-desc { font-size: 13px; color: var(--text-muted); flex: 2; }
     .misinfo-pct { font-weight: 700; font-size: 14px; color: var(--false); flex-shrink: 0; }
@@ -238,7 +239,7 @@
         <!-- SCIENTIFIC SOURCES -->
         <div class="source-category">
           <div class="category-header fade-up">
-            <div class="category-icon" style="background:rgba(57,255,126,0.1);">🔬</div>
+            <div class="category-icon" style="background:rgba(220,167,250,0.1);"><i data-lucide="microscope"></i></div>
             <div>
               <h2>Scientific Institutions</h2>
               <p>Peer-reviewed and authoritative sources used for claim verification</p>
@@ -248,7 +249,7 @@
           <div class="source-grid">
             <div class="source-card fade-up-3">
               <div class="source-card-top">
-                <div class="source-card-icon">🏥</div>
+                <div class="source-card-icon"><i data-lucide="heart-pulse"></i></div>
                 <span class="badge badge-true">Primary</span>
               </div>
               <h4>World Health Organization</h4>
@@ -261,7 +262,7 @@
 
             <div class="source-card fade-up-4">
               <div class="source-card-top">
-                <div class="source-card-icon">🧬</div>
+                <div class="source-card-icon"><i data-lucide="dna"></i></div>
                 <span class="badge badge-true">Primary</span>
               </div>
               <h4>PubMed / NCBI</h4>
@@ -274,7 +275,7 @@
 
             <div class="source-card fade-up-5">
               <div class="source-card-top">
-                <div class="source-card-icon">🏛️</div>
+                <div class="source-card-icon"><i data-lucide="landmark"></i></div>
                 <span class="badge badge-true">Primary</span>
               </div>
               <h4>CDC</h4>
@@ -287,7 +288,7 @@
 
             <div class="source-card fade-up-3">
               <div class="source-card-top">
-                <div class="source-card-icon">🌡️</div>
+                <div class="source-card-icon"><i data-lucide="thermometer"></i></div>
                 <span class="badge badge-true">Primary</span>
               </div>
               <h4>IPCC / NASA Climate</h4>
@@ -300,7 +301,7 @@
 
             <div class="source-card fade-up-4">
               <div class="source-card-top">
-                <div class="source-card-icon">🔭</div>
+                <div class="source-card-icon"><i data-lucide="telescope"></i></div>
                 <span class="badge badge-true">Primary</span>
               </div>
               <h4>NASA / ESA</h4>
@@ -313,7 +314,7 @@
 
             <div class="source-card fade-up-5">
               <div class="source-card-top">
-                <div class="source-card-icon">📚</div>
+                <div class="source-card-icon"><i data-lucide="book-open"></i></div>
                 <span class="badge badge-true">Primary</span>
               </div>
               <h4>Nature & Science Journals</h4>
@@ -329,7 +330,7 @@
         <!-- SOCIAL MEDIA SOURCES -->
         <div class="source-category">
           <div class="category-header fade-up">
-            <div class="category-icon" style="background:rgba(0,212,255,0.1);">📡</div>
+            <div class="category-icon" style="background:rgba(220,167,250,0.1);"><i data-lucide="radio"></i></div>
             <div>
               <h2>Social Media Monitoring</h2>
               <p>Real-time feeds tracked for claim detection and spread analysis</p>
@@ -338,19 +339,19 @@
 
           <div class="source-grid">
             <div class="source-card fade-up-3">
-              <div class="source-card-top"><div class="source-card-icon">🐦</div><span class="badge badge-info">Social</span></div>
+              <div class="source-card-top"><div class="source-card-icon"><i data-lucide="at-sign"></i></div><span class="badge badge-info">Social</span></div>
               <h4>Twitter / X API</h4>
               <p>500M+ daily tweets filtered for science keywords, tracking viral claims in real-time.</p>
               <div class="source-card-footer"><span class="source-update">Updated: Real-time</span><span style="font-size:12px; color:var(--accent);">Live Feed</span></div>
             </div>
             <div class="source-card fade-up-4">
-              <div class="source-card-top"><div class="source-card-icon">👽</div><span class="badge badge-info">Social</span></div>
+              <div class="source-card-top"><div class="source-card-icon"><i data-lucide="message-circle"></i></div><span class="badge badge-info">Social</span></div>
               <h4>Reddit (Pushshift)</h4>
               <p>Science subreddits + misinformation tracking across 50+ relevant communities.</p>
               <div class="source-card-footer"><span class="source-update">Updated: Real-time</span><span style="font-size:12px; color:var(--accent);">Live Feed</span></div>
             </div>
             <div class="source-card fade-up-5">
-              <div class="source-card-top"><div class="source-card-icon">📱</div><span class="badge badge-info">Social</span></div>
+              <div class="source-card-top"><div class="source-card-icon"><i data-lucide="send"></i></div><span class="badge badge-info">Social</span></div>
               <h4>Telegram Public Channels</h4>
               <p>Key origin point for health misinformation. We monitor 2,400+ public channels.</p>
               <div class="source-card-footer"><span class="source-update">Updated: Hourly</span><span style="font-size:12px; color:var(--accent);">Monitored</span></div>
@@ -361,7 +362,7 @@
         <!-- MISINFO ORIGIN SOURCES -->
         <div class="source-category">
           <div class="category-header fade-up">
-            <div class="category-icon" style="background:rgba(255,77,109,0.1);">⚠️</div>
+            <div class="category-icon" style="background:rgba(250,167,197,0.1);"><i data-lucide="alert-triangle"></i></div>
             <div>
               <h2>Misinformation Origin Tracking</h2>
               <p>Platforms where false science claims most frequently originate</p>
@@ -370,34 +371,28 @@
 
           <div class="misinfo-sources fade-up-3">
             <div class="misinfo-row">
-              <div class="misinfo-platform">🐦</div>
+              <div class="misinfo-platform"><i data-lucide="at-sign"></i></div>
               <div class="misinfo-name">Twitter/X</div>
               <div class="misinfo-desc">Highest volume. Misinformation spreads fastest here due to retweet mechanics.</div>
               <div class="misinfo-pct">38%</div>
             </div>
             <div class="misinfo-row">
-              <div class="misinfo-platform">📱</div>
+              <div class="misinfo-platform"><i data-lucide="send"></i></div>
               <div class="misinfo-name">Telegram</div>
               <div class="misinfo-desc">Origin point for most coordinated misinformation campaigns. Low moderation.</div>
               <div class="misinfo-pct">27%</div>
             </div>
             <div class="misinfo-row">
-              <div class="misinfo-platform">📘</div>
+              <div class="misinfo-platform"><i data-lucide="users"></i></div>
               <div class="misinfo-name">Facebook Groups</div>
               <div class="misinfo-desc">Closed groups spread health misinformation to older demographics.</div>
               <div class="misinfo-pct">19%</div>
             </div>
             <div class="misinfo-row">
-              <div class="misinfo-platform">📺</div>
+              <div class="misinfo-platform"><i data-lucide="play-circle"></i></div>
               <div class="misinfo-name">YouTube</div>
               <div class="misinfo-desc">Long-form conspiracy content with high watch-time engagement.</div>
               <div class="misinfo-pct">11%</div>
-            </div>
-            <div class="misinfo-row">
-              <div class="misinfo-platform">🌐</div>
-              <div class="misinfo-name">Fringe Websites</div>
-              <div class="misinfo-desc">Original sources for pseudoscientific content that then migrates to social media.</div>
-              <div class="misinfo-pct">5%</div>
             </div>
           </div>
         </div>
@@ -409,5 +404,6 @@
       <p>SciSniff &copy; 2026 — Built for <span>Science Communication</span> · Big Data Analytics Assignment</p>
     </footer>
   </div>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

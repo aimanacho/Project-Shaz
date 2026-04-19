@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SciSniff — Topic Explorer</title>
   <link rel="stylesheet" href="style.css"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     .topics-page { padding: 60px 0; }
 
@@ -28,8 +29,8 @@
     }
 
     .filter-tab:hover, .filter-tab.active {
-      background: rgba(0,212,255,0.1);
-      border-color: rgba(0,212,255,0.4);
+      background: rgba(220,167,250,0.1);
+      border-color: rgba(220,167,250,0.4);
       color: var(--accent);
     }
 
@@ -63,7 +64,7 @@
     .topic-hero-card:hover { transform: translateY(-4px); filter: brightness(1.1); }
 
     .topic-hero-card .topic-emoji {
-      font-size: 40px; margin-bottom: 16px; display: block;
+      margin-bottom: 16px; display: block; line-height: 1;
     }
 
     .topic-hero-card h3 {
@@ -96,7 +97,7 @@
     }
 
     .topic-card:hover {
-      border-color: rgba(0,212,255,0.3);
+      border-color: rgba(220,167,250,0.3);
       transform: translateY(-3px);
       box-shadow: 0 12px 32px rgba(0,0,0,0.3);
     }
@@ -105,7 +106,7 @@
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
     }
 
-    .topic-card-icon { font-size: 28px; }
+    .topic-card-icon { display: flex; align-items: center; }
 
     .topic-trend {
       font-size: 12px; font-weight: 600;
@@ -199,19 +200,19 @@
         <!-- FILTER TABS -->
         <div class="filter-tabs fade-up-4">
           <div class="filter-tab active">All Topics</div>
-          <div class="filter-tab">🔴 High Risk</div>
-          <div class="filter-tab">📈 Trending</div>
-          <div class="filter-tab">💉 Health</div>
-          <div class="filter-tab">🌍 Climate</div>
-          <div class="filter-tab">🚀 Space</div>
-          <div class="filter-tab">🧬 Biology</div>
-          <div class="filter-tab">⚡ Technology</div>
+          <div class="filter-tab"><i data-lucide="alert-circle"></i> High Risk</div>
+          <div class="filter-tab"><i data-lucide="trending-up"></i> Trending</div>
+          <div class="filter-tab"><i data-lucide="syringe"></i> Health</div>
+          <div class="filter-tab"><i data-lucide="globe"></i> Climate</div>
+          <div class="filter-tab"><i data-lucide="rocket"></i> Space</div>
+          <div class="filter-tab"><i data-lucide="dna"></i> Biology</div>
+          <div class="filter-tab"><i data-lucide="zap"></i> Technology</div>
         </div>
 
         <!-- HERO TOPIC CARDS -->
         <div class="topics-hero">
           <a href="results.html" class="topic-hero-card fade-up-3" style="background:linear-gradient(135deg,#1a0a14,#2d0f1f);">
-            <span class="topic-emoji">💉</span>
+            <span class="topic-emoji"><i data-lucide="syringe"></i></span>
             <h3>Vaccines & Medicine</h3>
             <p>The #1 most targeted science topic by misinformation campaigns globally</p>
             <div class="topic-stat">
@@ -220,7 +221,7 @@
             </div>
           </a>
           <a href="results.html" class="topic-hero-card fade-up-4" style="background:linear-gradient(135deg,#0a1420,#0f2040);">
-            <span class="topic-emoji">🌍</span>
+            <span class="topic-emoji"><i data-lucide="globe-2"></i></span>
             <h3>Climate Change</h3>
             <p>Denial narratives surge following extreme weather events</p>
             <div class="topic-stat">
@@ -229,7 +230,7 @@
             </div>
           </a>
           <a href="results.html" class="topic-hero-card fade-up-5" style="background:linear-gradient(135deg,#0d1a0a,#1a2d10);">
-            <span class="topic-emoji">⚡</span>
+            <span class="topic-emoji"><i data-lucide="zap"></i></span>
             <h3>5G & Technology</h3>
             <p>Health fears driven by electromagnetic radiation myths</p>
             <div class="topic-stat">
@@ -244,7 +245,7 @@
 
           <a href="results.html" class="topic-card fade-up-3">
             <div class="topic-card-top">
-              <div class="topic-card-icon">🧬</div>
+              <div class="topic-card-icon"><i data-lucide="dna"></i></div>
               <div class="topic-trend trend-up">▲ +24% this week</div>
             </div>
             <h3>GMOs & Food Safety</h3>
@@ -262,7 +263,7 @@
 
           <a href="results.html" class="topic-card fade-up-4">
             <div class="topic-card-top">
-              <div class="topic-card-icon">🧠</div>
+              <div class="topic-card-icon"><i data-lucide="brain"></i></div>
               <div class="topic-trend trend-up">▲ +18% this week</div>
             </div>
             <h3>Mental Health & Meds</h3>
@@ -280,7 +281,7 @@
 
           <a href="results.html" class="topic-card fade-up-5">
             <div class="topic-card-top">
-              <div class="topic-card-icon">🚀</div>
+              <div class="topic-card-icon"><i data-lucide="rocket"></i></div>
               <div class="topic-trend trend-flat">→ Stable</div>
             </div>
             <h3>Space & NASA</h3>
@@ -298,7 +299,7 @@
 
           <a href="results.html" class="topic-card fade-up-3">
             <div class="topic-card-top">
-              <div class="topic-card-icon">🥗</div>
+              <div class="topic-card-icon"><i data-lucide="leaf"></i></div>
               <div class="topic-trend trend-up">▲ +9% this week</div>
             </div>
             <h3>Nutrition & Diet</h3>
@@ -316,7 +317,7 @@
 
           <a href="results.html" class="topic-card fade-up-4">
             <div class="topic-card-top">
-              <div class="topic-card-icon">🤖</div>
+              <div class="topic-card-icon"><i data-lucide="bot"></i></div>
               <div class="topic-trend trend-up">▲ +41% this week</div>
             </div>
             <h3>Artificial Intelligence</h3>
@@ -334,7 +335,7 @@
 
           <a href="results.html" class="topic-card fade-up-5">
             <div class="topic-card-top">
-              <div class="topic-card-icon">☢️</div>
+              <div class="topic-card-icon"><i data-lucide="atom"></i></div>
               <div class="topic-trend trend-down">▼ -5% this week</div>
             </div>
             <h3>Nuclear Energy</h3>
@@ -403,6 +404,7 @@
   </div>
 
   <script>
+    lucide.createIcons();
     document.querySelectorAll('.filter-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));

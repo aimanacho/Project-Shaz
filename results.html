@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SciSniff — Results</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     .results-page { padding: 100px 0 60px; }
 
@@ -34,8 +35,8 @@
 
     /* VERDICT BANNER */
     .verdict-banner {
-      background: linear-gradient(135deg, rgba(255,77,109,0.12), rgba(255,77,109,0.04));
-      border: 1px solid rgba(255,77,109,0.3);
+      background: linear-gradient(135deg, rgba(250,167,197,0.12), rgba(250,167,197,0.04));
+      border: 1px solid rgba(250,167,197,0.3);
       border-radius: 20px;
       padding: 32px 36px;
       margin-bottom: 28px;
@@ -101,7 +102,7 @@
     .source-icon {
       width: 40px; height: 40px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
+      flex-shrink: 0;
     }
 
     .source-name {
@@ -144,7 +145,7 @@
 
     .platform-row:last-child { border-bottom: none; }
 
-    .platform-icon { font-size: 20px; width: 28px; text-align: center; }
+    .platform-icon { width: 28px; display: flex; align-items: center; justify-content: center; }
 
     .platform-name { font-size: 14px; font-weight: 500; width: 80px; flex-shrink: 0; }
 
@@ -181,8 +182,8 @@
 
     /* SHARE BOX */
     .share-box {
-      background: rgba(0,212,255,0.06);
-      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(220,167,250,0.06);
+      border: 1px solid rgba(220,167,250,0.2);
       border-radius: 14px;
       padding: 20px;
       text-align: center;
@@ -253,8 +254,8 @@
           <div class="claim-label">Claim being checked</div>
           <div class="claim-text">"Microplastics found in COVID vaccines cause infertility in women"</div>
           <div class="claim-meta">
-            <span class="badge badge-info">💉 Vaccines</span>
-            <span class="badge badge-info">🔬 Medicine</span>
+            <span class="badge badge-info"><i data-lucide="syringe"></i> Vaccines</span>
+            <span class="badge badge-info"><i data-lucide="microscope"></i> Medicine</span>
             <span style="font-size:13px; color:var(--text-dim);">First detected: Twitter/X · 2 hours ago</span>
             <span style="font-size:13px; color:var(--text-dim);">48,291 checks</span>
           </div>
@@ -264,11 +265,11 @@
         <div class="verdict-banner fade-up-3">
           <div class="verdict-score-ring">
             <svg width="110" height="110" viewBox="0 0 110 110">
-              <circle cx="55" cy="55" r="46" fill="none" stroke="rgba(255,77,109,0.15)" stroke-width="10"/>
-              <circle cx="55" cy="55" r="46" fill="none" stroke="#ff4d6d" stroke-width="10"
+              <circle cx="55" cy="55" r="46" fill="none" stroke="rgba(250,167,197,0.15)" stroke-width="10"/>
+              <circle cx="55" cy="55" r="46" fill="none" stroke="#FAA7C5" stroke-width="10"
                 stroke-dasharray="289" stroke-dashoffset="254"
                 stroke-linecap="round"
-                style="transition:stroke-dashoffset 1.5s ease; filter:drop-shadow(0 0 8px rgba(255,77,109,0.5))"/>
+                style="transition:stroke-dashoffset 1.5s ease; filter:drop-shadow(0 0 8px rgba(250,167,197,0.5))"/>
             </svg>
             <div class="verdict-score-inner">
               <div class="verdict-score-number">12%</div>
@@ -301,50 +302,50 @@
               <h3 style="font-size:20px; margin-bottom:20px;">What science actually says</h3>
 
               <div class="source-item">
-                <div class="source-icon" style="background:rgba(57,255,126,0.1);">🏥</div>
+                <div class="source-icon" style="background:rgba(220,167,250,0.1);"><i data-lucide="heart-pulse"></i></div>
                 <div>
                   <div class="source-name">World Health Organization (WHO)</div>
                   <div class="source-excerpt">
                     "Approved COVID-19 vaccines do not contain microplastics. Vaccine ingredients 
                     are rigorously tested and publicly disclosed in regulatory filings."
                   </div>
-                  <span class="source-tag" style="background:rgba(57,255,126,0.1); color:var(--true);">✓ Debunks claim</span>
+                  <span class="source-tag" style="background:rgba(220,167,250,0.1); color:var(--true);">✓ Debunks claim</span>
                 </div>
               </div>
 
               <div class="source-item">
-                <div class="source-icon" style="background:rgba(57,255,126,0.1);">🔬</div>
+                <div class="source-icon" style="background:rgba(220,167,250,0.1);"><i data-lucide="microscope"></i></div>
                 <div>
                   <div class="source-name">PubMed — Journal of Reproductive Medicine</div>
                   <div class="source-excerpt">
                     Comprehensive 2023 meta-analysis of 42 studies found no causal link between 
                     any COVID-19 vaccine and female fertility outcomes.
                   </div>
-                  <span class="source-tag" style="background:rgba(57,255,126,0.1); color:var(--true);">✓ Debunks claim</span>
+                  <span class="source-tag" style="background:rgba(220,167,250,0.1); color:var(--true);">✓ Debunks claim</span>
                 </div>
               </div>
 
               <div class="source-item">
-                <div class="source-icon" style="background:rgba(57,255,126,0.1);">🏛️</div>
+                <div class="source-icon" style="background:rgba(220,167,250,0.1);"><i data-lucide="landmark"></i></div>
                 <div>
                   <div class="source-name">CDC — Vaccine Safety Monitoring</div>
                   <div class="source-excerpt">
                     CDC's V-safe surveillance program tracking 10M+ vaccinated individuals 
                     found no elevated rates of infertility among female recipients.
                   </div>
-                  <span class="source-tag" style="background:rgba(57,255,126,0.1); color:var(--true);">✓ Debunks claim</span>
+                  <span class="source-tag" style="background:rgba(220,167,250,0.1); color:var(--true);">✓ Debunks claim</span>
                 </div>
               </div>
 
               <div class="source-item">
-                <div class="source-icon" style="background:rgba(255,77,109,0.1);">📰</div>
+                <div class="source-icon" style="background:rgba(250,167,197,0.1);"><i data-lucide="newspaper"></i></div>
                 <div>
                   <div class="source-name">Telegram Channel — "TruthAboutVaccines"</div>
                   <div class="source-excerpt">
                     Origin of claim. Posted a manipulated image of a "study" that was later 
                     confirmed as fabricated by MIT Science Verification Lab.
                   </div>
-                  <span class="source-tag" style="background:rgba(255,77,109,0.1); color:var(--false);">✕ Misinformation source</span>
+                  <span class="source-tag" style="background:rgba(250,167,197,0.1); color:var(--false);">✕ Misinformation source</span>
                 </div>
               </div>
             </div>
@@ -368,25 +369,25 @@
 
               <div class="section-label" style="margin-top:4px;">Platform Breakdown</div>
               <div class="platform-row">
-                <div class="platform-icon">🐦</div>
+                <div class="platform-icon"><i data-lucide="at-sign"></i></div>
                 <div class="platform-name">Twitter/X</div>
                 <div class="platform-bar-track"><div class="platform-bar-fill" data-w="72%"></div></div>
                 <div class="platform-pct">72%</div>
               </div>
               <div class="platform-row">
-                <div class="platform-icon">📱</div>
+                <div class="platform-icon"><i data-lucide="send"></i></div>
                 <div class="platform-name">Telegram</div>
                 <div class="platform-bar-track"><div class="platform-bar-fill" data-w="15%"></div></div>
                 <div class="platform-pct">15%</div>
               </div>
               <div class="platform-row">
-                <div class="platform-icon">👽</div>
+                <div class="platform-icon"><i data-lucide="message-circle"></i></div>
                 <div class="platform-name">Reddit</div>
                 <div class="platform-bar-track"><div class="platform-bar-fill" data-w="8%"></div></div>
                 <div class="platform-pct">8%</div>
               </div>
               <div class="platform-row">
-                <div class="platform-icon">📘</div>
+                <div class="platform-icon"><i data-lucide="users"></i></div>
                 <div class="platform-name">Facebook</div>
                 <div class="platform-bar-track"><div class="platform-bar-fill" data-w="5%"></div></div>
                 <div class="platform-pct">5%</div>
@@ -403,8 +404,8 @@
               <div class="section-label" style="text-align:center;">Share This Result</div>
               <p>Help others see the facts. Copy the link below to share.</p>
               <div class="share-link">SciSniff.io/c/microplastics-covid-vac-k29x</div>
-              <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="copyLink()">
-                📋 Copy Link
+              <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="copyLink(this)">
+                <i data-lucide="clipboard"></i> Copy Link
               </button>
             </div>
 
@@ -453,7 +454,8 @@
 
     // Animate platform bars
     setTimeout(() => {
-      document.querySelectorAll('.platform-bar-fill').forEach(bar => {
+      lucide.createIcons();
+    document.querySelectorAll('.platform-bar-fill').forEach(bar => {
         bar.style.width = bar.dataset.w;
       });
       document.querySelectorAll('.trend-bar-fill').forEach(bar => {
@@ -461,10 +463,13 @@
       });
     }, 400);
 
-    function copyLink() {
-      const btn = event.target;
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => btn.textContent = '📋 Copy Link', 2000);
+    function copyLink(btn) {
+      btn.innerHTML = '<i data-lucide="check"></i> Copied!';
+      lucide.createIcons();
+      setTimeout(() => {
+        btn.innerHTML = '<i data-lucide="clipboard"></i> Copy Link';
+        lucide.createIcons();
+      }, 2000);
     }
   </script>
 </body>
