@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SciCheck — Topic Explorer</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .topics-page { padding: 60px 0; }
+
+    .page-header { margin-bottom: 48px; }
+    .page-header h1 { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .page-header p { color: var(--text-muted); font-size: 16px; max-width: 500px; }
+
+    /* FILTER TABS */
+    .filter-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;
+    }
+
+    .filter-tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 14px; font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .filter-tab:hover, .filter-tab.active {
+      background: rgba(0,212,255,0.1);
+      border-color: rgba(0,212,255,0.4);
+      color: var(--accent);
+    }
+
+    /* TOPIC HERO CARDS */
+    .topics-hero {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .topic-hero-card {
+      border-radius: 20px;
+      padding: 32px;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      min-height: 220px;
+    }
+
+    .topic-hero-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent);
+      pointer-events: none;
+    }
+
+    .topic-hero-card:hover { transform: translateY(-4px); filter: brightness(1.1); }
+
+    .topic-hero-card .topic-emoji {
+      font-size: 40px; margin-bottom: 16px; display: block;
+    }
+
+    .topic-hero-card h3 {
+      font-size: 22px; font-weight: 800; margin-bottom: 8px; color: white;
+    }
+
+    .topic-hero-card p { font-size: 14px; opacity: 0.7; color: white; margin-bottom: 20px; }
+
+    .topic-hero-card .topic-stat {
+      font-size: 13px; opacity: 0.8; color: white;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* TOPIC GRID */
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .topic-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .topic-card:hover {
+      border-color: rgba(0,212,255,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+
+    .topic-card-top {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+    }
+
+    .topic-card-icon { font-size: 28px; }
+
+    .topic-trend {
+      font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    .trend-up { color: var(--false); }
+    .trend-down { color: var(--true); }
+    .trend-flat { color: var(--text-dim); }
+
+    .topic-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .topic-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px; }
+
+    .topic-card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 14px; border-top: 1px solid var(--border);
+    }
+
+    .topic-count { font-size: 12px; color: var(--text-dim); }
+    .topic-count strong { color: var(--text-muted); }
+
+    /* FALSE RATE BAR */
+    .false-rate {
+      display: flex; align-items: center; gap: 8px; margin-top: 10px;
+    }
+    .false-rate-label { font-size: 11px; color: var(--text-dim); }
+    .false-rate-bar { flex: 1; height: 4px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+    .false-rate-fill { height: 100%; border-radius: 100px; background: var(--false); }
+    .false-rate-pct { font-size: 11px; font-weight: 700; color: var(--false); }
+
+    /* MISINFORMATION INDEX */
+    .misinfo-index { padding: 60px 0 0; }
+    .index-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+    .index-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+      display: flex; gap: 20px; align-items: center;
+    }
+
+    .index-rank {
+      font-family: 'Syne', sans-serif;
+      font-size: 40px; font-weight: 800;
+      color: var(--border); line-height: 1; flex-shrink: 0; width: 48px;
+    }
+
+    .index-info h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .index-info p { font-size: 13px; color: var(--text-muted); }
+
+    .index-score {
+      margin-left: auto; flex-shrink: 0;
+      font-family: 'Syne', sans-serif;
+      font-size: 24px; font-weight: 800;
+    }
+
+    @media (max-width: 900px) {
+      .topics-hero { grid-template-columns: 1fr; }
+      .topics-grid { grid-template-columns: 1fr 1fr; }
+      .index-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .topics-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><div class="dot"></div>SciCheck</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="topics.html" class="active">Topics</a></li>
+      <li><a href="sources.html">Sources</a></li>
+      <li><a href="results.html" class="nav-cta">Check a Claim</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+    <div class="topics-page">
+      <div class="container">
+
+        <div class="page-header">
+          <div class="section-label fade-up">Browse by Topic</div>
+          <h1 class="fade-up-2">Topic <span style="color:var(--accent);">Explorer</span></h1>
+          <p class="fade-up-3">Explore science misinformation patterns across different fields. Updated in real-time from 12B+ data points.</p>
+        </div>
+
+        <!-- FILTER TABS -->
+        <div class="filter-tabs fade-up-4">
+          <div class="filter-tab active">All Topics</div>
+          <div class="filter-tab">🔴 High Risk</div>
+          <div class="filter-tab">📈 Trending</div>
+          <div class="filter-tab">💉 Health</div>
+          <div class="filter-tab">🌍 Climate</div>
+          <div class="filter-tab">🚀 Space</div>
+          <div class="filter-tab">🧬 Biology</div>
+          <div class="filter-tab">⚡ Technology</div>
+        </div>
+
+        <!-- HERO TOPIC CARDS -->
+        <div class="topics-hero">
+          <a href="results.html" class="topic-hero-card fade-up-3" style="background:linear-gradient(135deg,#1a0a14,#2d0f1f);">
+            <span class="topic-emoji">💉</span>
+            <h3>Vaccines & Medicine</h3>
+            <p>The #1 most targeted science topic by misinformation campaigns globally</p>
+            <div class="topic-stat">
+              <span class="badge badge-false">High Risk</span>
+              <span>· 892,441 claims analyzed</span>
+            </div>
+          </a>
+          <a href="results.html" class="topic-hero-card fade-up-4" style="background:linear-gradient(135deg,#0a1420,#0f2040);">
+            <span class="topic-emoji">🌍</span>
+            <h3>Climate Change</h3>
+            <p>Denial narratives surge following extreme weather events</p>
+            <div class="topic-stat">
+              <span class="badge badge-mixed">Medium Risk</span>
+              <span>· 541,290 claims</span>
+            </div>
+          </a>
+          <a href="results.html" class="topic-hero-card fade-up-5" style="background:linear-gradient(135deg,#0d1a0a,#1a2d10);">
+            <span class="topic-emoji">⚡</span>
+            <h3>5G & Technology</h3>
+            <p>Health fears driven by electromagnetic radiation myths</p>
+            <div class="topic-stat">
+              <span class="badge badge-false">High Risk</span>
+              <span>· 312,008 claims</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- TOPIC GRID -->
+        <div class="topics-grid">
+
+          <a href="results.html" class="topic-card fade-up-3">
+            <div class="topic-card-top">
+              <div class="topic-card-icon">🧬</div>
+              <div class="topic-trend trend-up">▲ +24% this week</div>
+            </div>
+            <h3>GMOs & Food Safety</h3>
+            <p>Claims about genetically modified organisms and their safety for human consumption.</p>
+            <div class="false-rate">
+              <span class="false-rate-label">False rate</span>
+              <div class="false-rate-bar"><div class="false-rate-fill" style="width:68%"></div></div>
+              <span class="false-rate-pct">68%</span>
+            </div>
+            <div class="topic-card-footer">
+              <span class="topic-count"><strong>184,220</strong> claims</span>
+              <span class="badge badge-false" style="font-size:11px;">High Risk</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="topic-card fade-up-4">
+            <div class="topic-card-top">
+              <div class="topic-card-icon">🧠</div>
+              <div class="topic-trend trend-up">▲ +18% this week</div>
+            </div>
+            <h3>Mental Health & Meds</h3>
+            <p>Misinformation around antidepressants, therapy, and psychiatric treatment effectiveness.</p>
+            <div class="false-rate">
+              <span class="false-rate-label">False rate</span>
+              <div class="false-rate-bar"><div class="false-rate-fill" style="width:55%"></div></div>
+              <span class="false-rate-pct">55%</span>
+            </div>
+            <div class="topic-card-footer">
+              <span class="topic-count"><strong>97,810</strong> claims</span>
+              <span class="badge badge-mixed" style="font-size:11px;">Medium Risk</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="topic-card fade-up-5">
+            <div class="topic-card-top">
+              <div class="topic-card-icon">🚀</div>
+              <div class="topic-trend trend-flat">→ Stable</div>
+            </div>
+            <h3>Space & NASA</h3>
+            <p>Flat Earth theories, moon landing denial, and hidden extraterrestrial evidence claims.</p>
+            <div class="false-rate">
+              <span class="false-rate-label">False rate</span>
+              <div class="false-rate-bar"><div class="false-rate-fill" style="width:89%"></div></div>
+              <span class="false-rate-pct">89%</span>
+            </div>
+            <div class="topic-card-footer">
+              <span class="topic-count"><strong>76,430</strong> claims</span>
+              <span class="badge badge-false" style="font-size:11px;">Very High</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="topic-card fade-up-3">
+            <div class="topic-card-top">
+              <div class="topic-card-icon">🥗</div>
+              <div class="topic-trend trend-up">▲ +9% this week</div>
+            </div>
+            <h3>Nutrition & Diet</h3>
+            <p>Superfood myths, detox scams, and pseudoscientific dietary claims.</p>
+            <div class="false-rate">
+              <span class="false-rate-label">False rate</span>
+              <div class="false-rate-bar"><div class="false-rate-fill" style="width:61%"></div></div>
+              <span class="false-rate-pct">61%</span>
+            </div>
+            <div class="topic-card-footer">
+              <span class="topic-count"><strong>224,115</strong> claims</span>
+              <span class="badge badge-mixed" style="font-size:11px;">Medium Risk</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="topic-card fade-up-4">
+            <div class="topic-card-top">
+              <div class="topic-card-icon">🤖</div>
+              <div class="topic-trend trend-up">▲ +41% this week</div>
+            </div>
+            <h3>Artificial Intelligence</h3>
+            <p>AI capability myths, sentience claims, and fears about job displacement timelines.</p>
+            <div class="false-rate">
+              <span class="false-rate-label">False rate</span>
+              <div class="false-rate-bar"><div class="false-rate-fill" style="width:44%"></div></div>
+              <span class="false-rate-pct">44%</span>
+            </div>
+            <div class="topic-card-footer">
+              <span class="topic-count"><strong>158,900</strong> claims</span>
+              <span class="badge badge-mixed" style="font-size:11px;">Medium Risk</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="topic-card fade-up-5">
+            <div class="topic-card-top">
+              <div class="topic-card-icon">☢️</div>
+              <div class="topic-trend trend-down">▼ -5% this week</div>
+            </div>
+            <h3>Nuclear Energy</h3>
+            <p>Radiation safety myths, Chernobyl legacy misinformation, and modern reactor risks.</p>
+            <div class="false-rate">
+              <span class="false-rate-label">False rate</span>
+              <div class="false-rate-bar"><div class="false-rate-fill" style="width:52%"></div></div>
+              <span class="false-rate-pct">52%</span>
+            </div>
+            <div class="topic-card-footer">
+              <span class="topic-count"><strong>44,220</strong> claims</span>
+              <span class="badge badge-mixed" style="font-size:11px;">Medium Risk</span>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- MISINFO INDEX -->
+        <div class="misinfo-index">
+          <div class="section-label fade-up">Misinformation Index</div>
+          <h2 class="fade-up-2" style="font-size:32px; margin-bottom:8px;">Most dangerous narratives right now</h2>
+          <p class="fade-up-3" style="color:var(--text-muted); margin-bottom:32px;">Ranked by spread velocity × false claim density</p>
+
+          <div class="index-grid">
+            <div class="index-card fade-up-4">
+              <div class="index-rank">01</div>
+              <div class="index-info">
+                <h4>Vaccine-infertility link</h4>
+                <p>Spreading 3× faster than average · Origin: Telegram</p>
+              </div>
+              <div class="index-score" style="color:var(--false);">9.2</div>
+            </div>
+            <div class="index-card fade-up-5">
+              <div class="index-rank">02</div>
+              <div class="index-info">
+                <h4>Climate cooling conspiracy</h4>
+                <p>Spikes after cold weather events · Origin: Twitter/X</p>
+              </div>
+              <div class="index-score" style="color:var(--false);">8.7</div>
+            </div>
+            <div class="index-card fade-up-3">
+              <div class="index-rank">03</div>
+              <div class="index-info">
+                <h4>5G DNA damage</h4>
+                <p>Resurging in Southeast Asia · Origin: Facebook Groups</p>
+              </div>
+              <div class="index-score" style="color:var(--mixed);">7.9</div>
+            </div>
+            <div class="index-card fade-up-4">
+              <div class="index-rank">04</div>
+              <div class="index-info">
+                <h4>Moon landing denial</h4>
+                <p>Steady base of believers · Origin: YouTube</p>
+              </div>
+              <div class="index-score" style="color:var(--mixed);">6.4</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer>
+      <p>SciCheck &copy; 2025 — Built for <span>Science Communication</span> · Big Data Analytics Assignment</p>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

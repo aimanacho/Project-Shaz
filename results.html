@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SciCheck — Results</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .results-page { padding: 100px 0 60px; }
+
+    /* CLAIM HEADER */
+    .claim-header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      margin-bottom: 28px;
+    }
+
+    .claim-label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 12px;
+    }
+
+    .claim-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 700;
+      line-height: 1.4; color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .claim-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+
+    /* VERDICT BANNER */
+    .verdict-banner {
+      background: linear-gradient(135deg, rgba(255,77,109,0.12), rgba(255,77,109,0.04));
+      border: 1px solid rgba(255,77,109,0.3);
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .verdict-score-ring {
+      position: relative;
+      width: 110px; height: 110px;
+      flex-shrink: 0;
+    }
+
+    .verdict-score-ring svg { transform: rotate(-90deg); }
+
+    .verdict-score-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+
+    .verdict-score-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 30px; font-weight: 800;
+      color: var(--false); line-height: 1;
+    }
+
+    .verdict-score-sub {
+      font-size: 10px; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    .verdict-info h2 {
+      font-size: 28px; font-weight: 800; margin-bottom: 8px;
+      color: var(--false);
+    }
+
+    .verdict-info p {
+      font-size: 15px; color: var(--text-muted);
+      line-height: 1.6; max-width: 560px;
+    }
+
+    /* TWO COL LAYOUT */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* SOURCE LIST */
+    .source-item {
+      display: flex;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+
+    .source-item:last-child { border-bottom: none; }
+
+    .source-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+
+    .source-name {
+      font-weight: 600; font-size: 15px; margin-bottom: 4px;
+    }
+
+    .source-excerpt {
+      font-size: 13px; color: var(--text-muted); line-height: 1.5;
+    }
+
+    .source-tag {
+      margin-top: 8px;
+      display: inline-block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 2px 10px; border-radius: 100px;
+    }
+
+    /* SPREAD CHART */
+    .mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 60px;
+      margin-top: 16px;
+    }
+
+    .mini-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height 0.8s ease;
+    }
+
+    /* PLATFORM BREAKDOWN */
+    .platform-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+
+    .platform-row:last-child { border-bottom: none; }
+
+    .platform-icon { font-size: 20px; width: 28px; text-align: center; }
+
+    .platform-name { font-size: 14px; font-weight: 500; width: 80px; flex-shrink: 0; }
+
+    .platform-bar-track {
+      flex: 1; height: 6px;
+      background: var(--surface2); border-radius: 100px; overflow: hidden;
+    }
+
+    .platform-bar-fill {
+      height: 100%; border-radius: 100px;
+      background: var(--false);
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+      width: 0;
+    }
+
+    .platform-pct {
+      font-size: 13px; font-weight: 600;
+      color: var(--text-muted); width: 36px; text-align: right;
+    }
+
+    /* RELATED CLAIMS */
+    .related-claim {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: padding-left 0.2s;
+      text-decoration: none;
+    }
+
+    .related-claim:last-child { border-bottom: none; }
+    .related-claim:hover { padding-left: 8px; }
+
+    .related-claim-text { font-size: 14px; color: var(--text); line-height: 1.4; flex: 1; margin-right: 12px; }
+    .related-claim-arrow { color: var(--text-dim); font-size: 16px; flex-shrink: 0; }
+
+    /* SHARE BOX */
+    .share-box {
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .share-box p { font-size: 14px; color: var(--text-muted); margin-bottom: 14px; }
+
+    .share-link {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      font-family: monospace;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    @media (max-width: 900px) {
+      .results-grid { grid-template-columns: 1fr; }
+      .verdict-banner { flex-direction: column; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="dot"></div>
+      SciCheck
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="topics.html">Topics</a></li>
+      <li><a href="sources.html">Sources</a></li>
+      <li><a href="results.html" class="nav-cta active">Check a Claim</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+    <div class="results-page">
+      <div class="container">
+
+        <!-- BACK + SEARCH BAR -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:28px;" class="fade-up">
+          <a href="index.html" class="btn btn-outline" style="padding:10px 18px; font-size:14px;">← Back</a>
+          <div style="flex:1; position:relative;">
+            <input type="text"
+              value="Microplastics found in COVID vaccines cause infertility in women"
+              style="width:100%; background:var(--surface); border:1px solid var(--border); border-radius:10px;
+                     padding:12px 120px 12px 18px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text); outline:none;"
+            />
+            <button onclick="window.location.href='results.html'"
+              style="position:absolute; right:6px; top:50%; transform:translateY(-50%);
+                     background:var(--accent); color:var(--bg); border:none; border-radius:8px;
+                     padding:8px 18px; font-weight:700; font-size:13px; cursor:pointer;">
+              Re-check
+            </button>
+          </div>
+        </div>
+
+        <!-- CLAIM HEADER -->
+        <div class="claim-header fade-up-2">
+          <div class="claim-label">Claim being checked</div>
+          <div class="claim-text">"Microplastics found in COVID vaccines cause infertility in women"</div>
+          <div class="claim-meta">
+            <span class="badge badge-info">💉 Vaccines</span>
+            <span class="badge badge-info">🔬 Medicine</span>
+            <span style="font-size:13px; color:var(--text-dim);">First detected: Twitter/X · 2 hours ago</span>
+            <span style="font-size:13px; color:var(--text-dim);">48,291 checks</span>
+          </div>
+        </div>
+
+        <!-- VERDICT -->
+        <div class="verdict-banner fade-up-3">
+          <div class="verdict-score-ring">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="46" fill="none" stroke="rgba(255,77,109,0.15)" stroke-width="10"/>
+              <circle cx="55" cy="55" r="46" fill="none" stroke="#ff4d6d" stroke-width="10"
+                stroke-dasharray="289" stroke-dashoffset="254"
+                stroke-linecap="round"
+                style="transition:stroke-dashoffset 1.5s ease; filter:drop-shadow(0 0 8px rgba(255,77,109,0.5))"/>
+            </svg>
+            <div class="verdict-score-inner">
+              <div class="verdict-score-number">12%</div>
+              <div class="verdict-score-sub">credibility</div>
+            </div>
+          </div>
+
+          <div class="verdict-info">
+            <div class="badge badge-false" style="margin-bottom:12px; font-size:13px; padding:6px 16px;">
+              ✕ &nbsp;Likely False
+            </div>
+            <h2>This claim is not supported by science</h2>
+            <p>
+              No peer-reviewed study has found microplastics in approved COVID-19 vaccines, nor is there 
+              credible evidence linking vaccine components to infertility. This claim has been debunked 
+              by WHO, CDC, and 14 independent research institutions.
+            </p>
+          </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="results-grid">
+
+          <!-- LEFT COLUMN -->
+          <div>
+
+            <!-- SOURCES -->
+            <div class="card fade-up-4" style="margin-bottom:24px;">
+              <div class="section-label">Evidence From Verified Sources</div>
+              <h3 style="font-size:20px; margin-bottom:20px;">What science actually says</h3>
+
+              <div class="source-item">
+                <div class="source-icon" style="background:rgba(57,255,126,0.1);">🏥</div>
+                <div>
+                  <div class="source-name">World Health Organization (WHO)</div>
+                  <div class="source-excerpt">
+                    "Approved COVID-19 vaccines do not contain microplastics. Vaccine ingredients 
+                    are rigorously tested and publicly disclosed in regulatory filings."
+                  </div>
+                  <span class="source-tag" style="background:rgba(57,255,126,0.1); color:var(--true);">✓ Debunks claim</span>
+                </div>
+              </div>
+
+              <div class="source-item">
+                <div class="source-icon" style="background:rgba(57,255,126,0.1);">🔬</div>
+                <div>
+                  <div class="source-name">PubMed — Journal of Reproductive Medicine</div>
+                  <div class="source-excerpt">
+                    Comprehensive 2023 meta-analysis of 42 studies found no causal link between 
+                    any COVID-19 vaccine and female fertility outcomes.
+                  </div>
+                  <span class="source-tag" style="background:rgba(57,255,126,0.1); color:var(--true);">✓ Debunks claim</span>
+                </div>
+              </div>
+
+              <div class="source-item">
+                <div class="source-icon" style="background:rgba(57,255,126,0.1);">🏛️</div>
+                <div>
+                  <div class="source-name">CDC — Vaccine Safety Monitoring</div>
+                  <div class="source-excerpt">
+                    CDC's V-safe surveillance program tracking 10M+ vaccinated individuals 
+                    found no elevated rates of infertility among female recipients.
+                  </div>
+                  <span class="source-tag" style="background:rgba(57,255,126,0.1); color:var(--true);">✓ Debunks claim</span>
+                </div>
+              </div>
+
+              <div class="source-item">
+                <div class="source-icon" style="background:rgba(255,77,109,0.1);">📰</div>
+                <div>
+                  <div class="source-name">Telegram Channel — "TruthAboutVaccines"</div>
+                  <div class="source-excerpt">
+                    Origin of claim. Posted a manipulated image of a "study" that was later 
+                    confirmed as fabricated by MIT Science Verification Lab.
+                  </div>
+                  <span class="source-tag" style="background:rgba(255,77,109,0.1); color:var(--false);">✕ Misinformation source</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SPREAD OVER TIME -->
+            <div class="card fade-up-5" style="margin-bottom:24px;">
+              <div class="section-label">Spread Timeline</div>
+              <h3 style="font-size:18px; margin-bottom:6px;">How this claim went viral</h3>
+              <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Posts per hour across all monitored platforms</p>
+
+              <div class="mini-chart" id="spreadChart"></div>
+              <div style="display:flex; justify-content:space-between; margin-top:6px;">
+                <span style="font-size:11px; color:var(--text-dim);">00:00</span>
+                <span style="font-size:11px; color:var(--text-dim);">06:00</span>
+                <span style="font-size:11px; color:var(--text-dim);">12:00</span>
+                <span style="font-size:11px; color:var(--text-dim);">18:00</span>
+                <span style="font-size:11px; color:var(--text-dim);">Now</span>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="section-label" style="margin-top:4px;">Platform Breakdown</div>
+              <div class="platform-row">
+                <div class="platform-icon">🐦</div>
+                <div class="platform-name">Twitter/X</div>
+                <div class="platform-bar-track"><div class="platform-bar-fill" data-w="72%"></div></div>
+                <div class="platform-pct">72%</div>
+              </div>
+              <div class="platform-row">
+                <div class="platform-icon">📱</div>
+                <div class="platform-name">Telegram</div>
+                <div class="platform-bar-track"><div class="platform-bar-fill" data-w="15%"></div></div>
+                <div class="platform-pct">15%</div>
+              </div>
+              <div class="platform-row">
+                <div class="platform-icon">👽</div>
+                <div class="platform-name">Reddit</div>
+                <div class="platform-bar-track"><div class="platform-bar-fill" data-w="8%"></div></div>
+                <div class="platform-pct">8%</div>
+              </div>
+              <div class="platform-row">
+                <div class="platform-icon">📘</div>
+                <div class="platform-name">Facebook</div>
+                <div class="platform-bar-track"><div class="platform-bar-fill" data-w="5%"></div></div>
+                <div class="platform-pct">5%</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div>
+
+            <!-- SHARE -->
+            <div class="share-box fade-up-3" style="margin-bottom:20px;">
+              <div class="section-label" style="text-align:center;">Share This Result</div>
+              <p>Help others see the facts. Copy the link below to share.</p>
+              <div class="share-link">scicheck.io/c/microplastics-covid-vac-k29x</div>
+              <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="copyLink()">
+                📋 Copy Link
+              </button>
+            </div>
+
+            <!-- RELATED CLAIMS -->
+            <div class="card fade-up-4" style="margin-bottom:20px;">
+              <div class="section-label">Related Claims</div>
+              <a href="results.html" class="related-claim">
+                <span class="related-claim-text">"COVID vaccines alter human DNA permanently"</span>
+                <span class="badge badge-false" style="flex-shrink:0;">False</span>
+              </a>
+              <a href="results.html" class="related-claim">
+                <span class="related-claim-text">"mRNA vaccines were never tested on humans before 2021"</span>
+                <span class="badge badge-false" style="flex-shrink:0;">False</span>
+              </a>
+              <a href="results.html" class="related-claim">
+                <span class="related-claim-text">"COVID vaccines reduce fertility in men by 15%"</span>
+                <span class="badge badge-false" style="flex-shrink:0;">False</span>
+              </a>
+              <a href="results.html" class="related-claim">
+                <span class="related-claim-text">"Natural immunity is stronger than vaccine immunity"</span>
+                <span class="badge badge-mixed" style="flex-shrink:0;">Mixed</span>
+              </a>
+            </div>
+
+            <!-- CREDIBILITY BREAKDOWN -->
+            <div class="card fade-up-5">
+              <div class="section-label">Credibility Breakdown</div>
+              <div style="margin-bottom:16px;">
+                <div class="trend-bar-wrap">
+                  <div class="trend-bar-label">Science</div>
+                  <div class="trend-bar-track"><div class="trend-bar-fill" style="background:var(--false);" data-width="8%"></div></div>
+                  <div class="trend-bar-value" style="color:var(--false);">8%</div>
+                </div>
+                <div class="trend-bar-wrap">
+                  <div class="trend-bar-label">Sources</div>
+                  <div class="trend-bar-track"><div class="trend-bar-fill" style="background:var(--false);" data-width="5%"></div></div>
+                  <div class="trend-bar-value" style="color:var(--false);">5%</div>
+                </div>
+                <div class="trend-bar-wrap">
+                  <div class="trend-bar-label">Consensus</div>
+                  <div class="trend-bar-track"><div class="trend-bar-fill" style="background:var(--false);" data-width="10%"></div></div>
+                  <div class="trend-bar-value" style="color:var(--false);">10%</div>
+                </div>
+                <div class="trend-bar-wrap">
+                  <div class="trend-bar-label">Evidence</div>
+                  <div class="trend-bar-track"><div class="trend-bar-fill" style="background:var(--false);" data-width="15%"></div></div>
+                  <div class="trend-bar-value" style="color:var(--false);">15%</div>
+                </div>
+              </div>
+              <a href="sources.html" class="btn btn-outline" style="width:100%; justify-content:center; font-size:14px;">
+                View Full Source Analysis →
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer>
+      <p>SciCheck &copy; 2025 — Built for <span>Science Communication</span> · Big Data Analytics Assignment</p>
+    </footer>
+  </div>
+
+  <script>
+    // Build spread chart
+    const chart = document.getElementById('spreadChart');
+    const heights = [4, 6, 5, 8, 10, 9, 12, 15, 22, 38, 72, 95, 88, 76, 60, 52, 48, 44, 40];
+    const colors = heights.map(h => h > 50 ? 'var(--false)' : h > 25 ? 'var(--mixed)' : 'var(--surface2)');
+    heights.forEach((h, i) => {
+      const bar = document.createElement('div');
+      bar.className = 'mini-bar';
+      bar.style.cssText = `height:${h}%; background:${colors[i]}; opacity:${0.5 + h/200};`;
+      chart.appendChild(bar);
+    });
+
+    // Animate platform bars
+    setTimeout(() => {
+      document.querySelectorAll('.platform-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.w;
+      });
+      document.querySelectorAll('.trend-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+    }, 400);
+
+    function copyLink() {
+      const btn = event.target;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Link', 2000);
+    }
+  </script>
+</body>
+</html>

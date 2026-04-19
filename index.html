@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SciCheck — Science Misinformation Detector</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* HERO */
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 32px 60px;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 80px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      max-width: 800px;
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), #6ee7f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero h1 .highlight-red {
+      background: linear-gradient(135deg, var(--false), #ff9eb5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+      font-weight: 300;
+    }
+
+    /* SEARCH BOX */
+    .search-box {
+      width: 100%;
+      max-width: 680px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 160px 20px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .search-input::placeholder { color: var(--text-dim); }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.12), 0 0 40px rgba(0,212,255,0.1);
+    }
+
+    .search-btn {
+      position: absolute;
+      right: 8px; top: 50%;
+      transform: translateY(-50%);
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover {
+      box-shadow: 0 0 24px rgba(0,212,255,0.5);
+      transform: translateY(-50%) scale(1.02);
+    }
+
+    .search-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 60px;
+    }
+
+    .example-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .example-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,212,255,0.05);
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: flex;
+      gap: 48px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-item { text-align: center; }
+
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-number span { color: var(--accent); }
+    .stat-desc { font-size: 13px; color: var(--text-muted); }
+
+    /* TRENDING */
+    .trending-section { padding: 80px 0; }
+
+    .trending-section h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 40px;
+    }
+
+    .trending-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .trending-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .trending-card:hover {
+      border-color: rgba(0,212,255,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3), 0 0 40px rgba(0,212,255,0.08);
+    }
+
+    .trending-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .trending-topic {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .trending-claim {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .trending-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .trending-checks {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .trending-checks strong { color: var(--text-muted); }
+
+    /* FEATURES */
+    .features-section { padding: 80px 0; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .trending-grid, .features-grid { grid-template-columns: 1fr; }
+      .stats-row { gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="dot"></div>
+      SciCheck
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="topics.html">Topics</a></li>
+      <li><a href="sources.html">Sources</a></li>
+      <li><a href="results.html" class="nav-cta">Check a Claim</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+    <section class="hero">
+      <div class="hero-eyebrow">Powered by Big Data Analytics</div>
+      <h1 class="fade-up">
+        Fight <span class="highlight-red">Science</span><br/>
+        Misinformation<br/>
+        with <span class="highlight">Data</span>
+      </h1>
+      <p class="hero-sub fade-up-2">
+        SciCheck aggregates millions of social media posts, news articles, and 
+        peer-reviewed sources to instantly verify science claims — in plain language.
+      </p>
+
+      <div class="search-box fade-up-3">
+        <input
+          type="text"
+          class="search-input"
+          id="mainSearch"
+          placeholder='Try: "5G towers cause cancer" or "vaccines cause autism"…'
+        />
+        <button class="search-btn" onclick="doSearch()">Check Claim →</button>
+      </div>
+
+      <div class="search-examples fade-up-4">
+        <span class="section-label" style="margin:0; align-self:center;">Try:</span>
+        <span class="example-chip" onclick="fillSearch(this)">Microplastics in vaccines</span>
+        <span class="example-chip" onclick="fillSearch(this)">COVID was lab-made</span>
+        <span class="example-chip" onclick="fillSearch(this)">Climate change is a hoax</span>
+        <span class="example-chip" onclick="fillSearch(this)">5G causes cancer</span>
+      </div>
+
+      <div class="stats-row fade-up-5">
+        <div class="stat-item">
+          <div class="stat-number">2.4<span>M+</span></div>
+          <div class="stat-desc">Claims analyzed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">180<span>+</span></div>
+          <div class="stat-desc">Verified sources</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">94<span>%</span></div>
+          <div class="stat-desc">Detection accuracy</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">12<span>B+</span></div>
+          <div class="stat-desc">Data points tracked</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRENDING CLAIMS -->
+    <section class="trending-section">
+      <div class="container">
+        <div class="section-label">Trending Now</div>
+        <h2 class="fade-up">Most checked claims today</h2>
+        <p class="section-sub fade-up-2">Real-time data from Twitter/X, Reddit, and news outlets</p>
+
+        <div class="trending-grid">
+
+          <a href="results.html" class="trending-card fade-up-3">
+            <div class="trending-top">
+              <span class="trending-topic">Vaccines</span>
+              <span class="badge badge-false">● False</span>
+            </div>
+            <div class="trending-claim">"Microplastics found in COVID vaccines cause infertility in women"</div>
+            <div class="trending-meta">
+              <span class="trending-checks">Checked by <strong>48,291</strong> users</span>
+              <span style="color:var(--text-dim); font-size:12px;">2h ago</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="trending-card fade-up-4">
+            <div class="trending-top">
+              <span class="trending-topic">Climate</span>
+              <span class="badge badge-mixed">● Mixed</span>
+            </div>
+            <div class="trending-claim">"Global temperatures have not risen in the past 10 years"</div>
+            <div class="trending-meta">
+              <span class="trending-checks">Checked by <strong>31,840</strong> users</span>
+              <span style="color:var(--text-dim); font-size:12px;">5h ago</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="trending-card fade-up-5">
+            <div class="trending-top">
+              <span class="trending-topic">Technology</span>
+              <span class="badge badge-false">● False</span>
+            </div>
+            <div class="trending-claim">"5G towers emit radiation that destroys human DNA"</div>
+            <div class="trending-meta">
+              <span class="trending-checks">Checked by <strong>27,105</strong> users</span>
+              <span style="color:var(--text-dim); font-size:12px;">7h ago</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="trending-card fade-up-3">
+            <div class="trending-top">
+              <span class="trending-topic">Medicine</span>
+              <span class="badge badge-true">● Accurate</span>
+            </div>
+            <div class="trending-claim">"Regular exercise reduces the risk of cardiovascular disease"</div>
+            <div class="trending-meta">
+              <span class="trending-checks">Checked by <strong>19,670</strong> users</span>
+              <span style="color:var(--text-dim); font-size:12px;">9h ago</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="trending-card fade-up-4">
+            <div class="trending-top">
+              <span class="trending-topic">Space</span>
+              <span class="badge badge-false">● False</span>
+            </div>
+            <div class="trending-claim">"NASA has been hiding proof of life on Mars since 1976"</div>
+            <div class="trending-meta">
+              <span class="trending-checks">Checked by <strong>15,432</strong> users</span>
+              <span style="color:var(--text-dim); font-size:12px;">12h ago</span>
+            </div>
+          </a>
+
+          <a href="results.html" class="trending-card fade-up-5">
+            <div class="trending-top">
+              <span class="trending-topic">Nutrition</span>
+              <span class="badge badge-mixed">● Mixed</span>
+            </div>
+            <div class="trending-claim">"Drinking alkaline water significantly changes blood pH levels"</div>
+            <div class="trending-meta">
+              <span class="trending-checks">Checked by <strong>11,890</strong> users</span>
+              <span style="color:var(--text-dim); font-size:12px;">14h ago</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-label">How it works</div>
+        <h2 class="fade-up" style="margin-bottom:8px;">Big Data behind every result</h2>
+        <p class="section-sub fade-up-2">We aggregate billions of data points across the web to deliver accurate, unbiased verdicts.</p>
+
+        <div class="features-grid">
+          <div class="feature-card fade-up-3">
+            <div class="feature-icon" style="background:rgba(0,212,255,0.1);">🔍</div>
+            <h3>Real-Time Claim Scanning</h3>
+            <p>We monitor Twitter/X, Reddit, Facebook, and 200+ news outlets in real-time, detecting science claims as they go viral.</p>
+          </div>
+          <div class="feature-card fade-up-4">
+            <div class="feature-icon" style="background:rgba(57,255,126,0.1);">🧬</div>
+            <h3>Verified Source Matching</h3>
+            <p>Claims are cross-referenced against PubMed, WHO, CDC, and 180+ peer-reviewed scientific databases automatically.</p>
+          </div>
+          <div class="feature-card fade-up-5">
+            <div class="feature-icon" style="background:rgba(255,77,109,0.1);">📡</div>
+            <h3>Spread Pattern Analysis</h3>
+            <p>Using NLP and network analysis, we map how misinformation spreads across platforms, regions, and demographics.</p>
+          </div>
+          <div class="feature-card fade-up-3">
+            <div class="feature-icon" style="background:rgba(255,179,71,0.1);">📊</div>
+            <h3>Credibility Scoring</h3>
+            <p>Each claim receives a transparent credibility score built from source quality, consensus level, and counter-evidence strength.</p>
+          </div>
+          <div class="feature-card fade-up-4">
+            <div class="feature-icon" style="background:rgba(0,212,255,0.1);">🌍</div>
+            <h3>Regional Trend Tracking</h3>
+            <p>Discover which misinformation narratives are surging in specific countries or regions before they go mainstream.</p>
+          </div>
+          <div class="feature-card fade-up-5">
+            <div class="feature-icon" style="background:rgba(57,255,126,0.1);">🔗</div>
+            <h3>Shareable Results</h3>
+            <p>Get a unique link to any fact-check result to easily share verified information back with friends, family, or colleagues.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>SciCheck &copy; 2025 — Built for <span>Science Communication</span> · Big Data Analytics Assignment</p>
+    </footer>
+  </div>
+
+  <script>
+    function fillSearch(el) {
+      document.getElementById('mainSearch').value = el.textContent;
+      document.getElementById('mainSearch').focus();
+    }
+
+    function doSearch() {
+      const val = document.getElementById('mainSearch').value.trim();
+      if (val.length > 2) {
+        window.location.href = 'results.html';
+      }
+    }
+
+    document.getElementById('mainSearch').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSearch();
+    });
+
+    // Animate trend bars on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.trend-bar-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width;
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.card').forEach(c => observer.observe(c));
+  </script>
+</body>
+</html>

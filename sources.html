@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SciCheck — Data Sources</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .sources-page { padding: 60px 0; }
+
+    .page-header { margin-bottom: 56px; }
+    .page-header h1 { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .page-header p { color: var(--text-muted); font-size: 16px; max-width: 560px; line-height: 1.6; }
+
+    /* DATA VOLUME */
+    .volume-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 60px;
+    }
+
+    .volume-cell {
+      background: var(--surface);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .volume-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px; font-weight: 800;
+      color: var(--accent); margin-bottom: 6px;
+    }
+
+    .volume-label { font-size: 13px; color: var(--text-muted); }
+
+    /* SOURCE CATEGORIES */
+    .source-category { margin-bottom: 56px; }
+
+    .category-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+    }
+
+    .category-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+
+    .category-header h2 { font-size: 24px; font-weight: 700; }
+    .category-header p { font-size: 14px; color: var(--text-muted); }
+
+    /* SOURCE CARDS */
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .source-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      transition: all 0.2s;
+    }
+
+    .source-card:hover {
+      border-color: rgba(0,212,255,0.25);
+      transform: translateY(-2px);
+    }
+
+    .source-card-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 12px;
+    }
+
+    .source-card-icon { font-size: 28px; }
+
+    .source-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .source-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    .source-card-footer {
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .source-update { font-size: 11px; color: var(--text-dim); }
+    .source-trust { font-size: 12px; font-weight: 700; color: var(--true); }
+
+    /* BIG DATA PIPELINE */
+    .pipeline-section { margin-bottom: 60px; }
+
+    .pipeline {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .pipeline-step {
+      flex: 1;
+      padding: 28px 24px;
+      position: relative;
+      border-right: 1px solid var(--border);
+    }
+
+    .pipeline-step:last-child { border-right: none; }
+
+    .pipeline-step::after {
+      content: '→';
+      position: absolute;
+      right: -12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--accent);
+      z-index: 2;
+    }
+
+    .pipeline-step:last-child::after { display: none; }
+
+    .pipeline-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 40px; font-weight: 800;
+      color: var(--border); line-height: 1; margin-bottom: 12px;
+    }
+
+    .pipeline-step h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .pipeline-step p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    .pipeline-tag {
+      margin-top: 12px;
+      display: inline-block;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    /* MISINFORMATION SOURCES */
+    .misinfo-sources {
+      background: rgba(255,77,109,0.05);
+      border: 1px solid rgba(255,77,109,0.2);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .misinfo-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 0; border-bottom: 1px solid rgba(255,77,109,0.1);
+    }
+    .misinfo-row:last-child { border-bottom: none; }
+
+    .misinfo-platform { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+    .misinfo-name { font-weight: 600; font-size: 14px; flex: 1; }
+    .misinfo-desc { font-size: 13px; color: var(--text-muted); flex: 2; }
+    .misinfo-pct { font-weight: 700; font-size: 14px; color: var(--false); flex-shrink: 0; }
+
+    @media (max-width: 900px) {
+      .volume-strip { grid-template-columns: 1fr 1fr; }
+      .source-grid { grid-template-columns: 1fr; }
+      .pipeline { flex-direction: column; }
+      .pipeline-step::after { content: '↓'; right: auto; bottom: -14px; left: 50%; transform: translateX(-50%); top: auto; }
+      .pipeline-step { border-right: none; border-bottom: 1px solid var(--border); }
+      .pipeline-step:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><div class="dot"></div>SciCheck</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="topics.html">Topics</a></li>
+      <li><a href="sources.html" class="active">Sources</a></li>
+      <li><a href="results.html" class="nav-cta">Check a Claim</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+    <div class="sources-page">
+      <div class="container">
+
+        <div class="page-header">
+          <div class="section-label fade-up">Data Infrastructure</div>
+          <h1 class="fade-up-2">Our <span style="color:var(--accent);">Data</span> Sources</h1>
+          <p class="fade-up-3">SciCheck aggregates data from 180+ trusted scientific institutions, real-time social media feeds, and misinformation tracking networks — processing over 12 billion data points daily.</p>
+        </div>
+
+        <!-- VOLUME STRIP -->
+        <div class="volume-strip fade-up-4">
+          <div class="volume-cell">
+            <div class="volume-number">12B+</div>
+            <div class="volume-label">Data points/day</div>
+          </div>
+          <div class="volume-cell">
+            <div class="volume-number">180+</div>
+            <div class="volume-label">Verified sources</div>
+          </div>
+          <div class="volume-cell">
+            <div class="volume-number">42</div>
+            <div class="volume-label">Languages monitored</div>
+          </div>
+          <div class="volume-cell">
+            <div class="volume-number">94%</div>
+            <div class="volume-label">Detection accuracy</div>
+          </div>
+        </div>
+
+        <!-- PIPELINE -->
+        <div class="pipeline-section">
+          <div class="section-label fade-up">Big Data Pipeline</div>
+          <h2 class="fade-up-2" style="font-size:28px; margin-bottom:24px;">How we process data</h2>
+
+          <div class="pipeline fade-up-3">
+            <div class="pipeline-step">
+              <div class="pipeline-num">01</div>
+              <h4>Ingest</h4>
+              <p>Real-time streams from social media APIs, RSS feeds, and scientific databases</p>
+              <span class="pipeline-tag">Apache Kafka</span>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">02</div>
+              <h4>Process</h4>
+              <p>NLP models extract and classify science claims from raw text at scale</p>
+              <span class="pipeline-tag">Spark + BERT</span>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">03</div>
+              <h4>Verify</h4>
+              <p>Claims matched against scientific consensus from peer-reviewed sources</p>
+              <span class="pipeline-tag">Vector Search</span>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">04</div>
+              <h4>Score</h4>
+              <p>Credibility score calculated from source trust, consensus, and counter-evidence</p>
+              <span class="pipeline-tag">ML Scoring</span>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">05</div>
+              <h4>Serve</h4>
+              <p>Results delivered to users in under 2 seconds via our API</p>
+              <span class="pipeline-tag">&lt; 2s latency</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCIENTIFIC SOURCES -->
+        <div class="source-category">
+          <div class="category-header fade-up">
+            <div class="category-icon" style="background:rgba(57,255,126,0.1);">🔬</div>
+            <div>
+              <h2>Scientific Institutions</h2>
+              <p>Peer-reviewed and authoritative sources used for claim verification</p>
+            </div>
+          </div>
+
+          <div class="source-grid">
+            <div class="source-card fade-up-3">
+              <div class="source-card-top">
+                <div class="source-card-icon">🏥</div>
+                <span class="badge badge-true">Primary</span>
+              </div>
+              <h4>World Health Organization</h4>
+              <p>Global health guidance, outbreak data, and vaccine safety information from 194 member states.</p>
+              <div class="source-card-footer">
+                <span class="source-update">Updated: Real-time</span>
+                <span class="source-trust">✓ Trusted</span>
+              </div>
+            </div>
+
+            <div class="source-card fade-up-4">
+              <div class="source-card-top">
+                <div class="source-card-icon">🧬</div>
+                <span class="badge badge-true">Primary</span>
+              </div>
+              <h4>PubMed / NCBI</h4>
+              <p>35M+ peer-reviewed biomedical literature citations, updated daily with new studies.</p>
+              <div class="source-card-footer">
+                <span class="source-update">Updated: Daily</span>
+                <span class="source-trust">✓ Trusted</span>
+              </div>
+            </div>
+
+            <div class="source-card fade-up-5">
+              <div class="source-card-top">
+                <div class="source-card-icon">🏛️</div>
+                <span class="badge badge-true">Primary</span>
+              </div>
+              <h4>CDC</h4>
+              <p>Centers for Disease Control — disease surveillance, vaccine monitoring, and public health data.</p>
+              <div class="source-card-footer">
+                <span class="source-update">Updated: Weekly</span>
+                <span class="source-trust">✓ Trusted</span>
+              </div>
+            </div>
+
+            <div class="source-card fade-up-3">
+              <div class="source-card-top">
+                <div class="source-card-icon">🌡️</div>
+                <span class="badge badge-true">Primary</span>
+              </div>
+              <h4>IPCC / NASA Climate</h4>
+              <p>Authoritative climate science data and temperature records for climate claim verification.</p>
+              <div class="source-card-footer">
+                <span class="source-update">Updated: Monthly</span>
+                <span class="source-trust">✓ Trusted</span>
+              </div>
+            </div>
+
+            <div class="source-card fade-up-4">
+              <div class="source-card-top">
+                <div class="source-card-icon">🔭</div>
+                <span class="badge badge-true">Primary</span>
+              </div>
+              <h4>NASA / ESA</h4>
+              <p>Space agency data for verifying space-related claims and astronomical phenomena.</p>
+              <div class="source-card-footer">
+                <span class="source-update">Updated: Real-time</span>
+                <span class="source-trust">✓ Trusted</span>
+              </div>
+            </div>
+
+            <div class="source-card fade-up-5">
+              <div class="source-card-top">
+                <div class="source-card-icon">📚</div>
+                <span class="badge badge-true">Primary</span>
+              </div>
+              <h4>Nature & Science Journals</h4>
+              <p>Direct API integration with Nature, Science, Cell, and The Lancet for cutting-edge research.</p>
+              <div class="source-card-footer">
+                <span class="source-update">Updated: Daily</span>
+                <span class="source-trust">✓ Trusted</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOCIAL MEDIA SOURCES -->
+        <div class="source-category">
+          <div class="category-header fade-up">
+            <div class="category-icon" style="background:rgba(0,212,255,0.1);">📡</div>
+            <div>
+              <h2>Social Media Monitoring</h2>
+              <p>Real-time feeds tracked for claim detection and spread analysis</p>
+            </div>
+          </div>
+
+          <div class="source-grid">
+            <div class="source-card fade-up-3">
+              <div class="source-card-top"><div class="source-card-icon">🐦</div><span class="badge badge-info">Social</span></div>
+              <h4>Twitter / X API</h4>
+              <p>500M+ daily tweets filtered for science keywords, tracking viral claims in real-time.</p>
+              <div class="source-card-footer"><span class="source-update">Updated: Real-time</span><span style="font-size:12px; color:var(--accent);">Live Feed</span></div>
+            </div>
+            <div class="source-card fade-up-4">
+              <div class="source-card-top"><div class="source-card-icon">👽</div><span class="badge badge-info">Social</span></div>
+              <h4>Reddit (Pushshift)</h4>
+              <p>Science subreddits + misinformation tracking across 50+ relevant communities.</p>
+              <div class="source-card-footer"><span class="source-update">Updated: Real-time</span><span style="font-size:12px; color:var(--accent);">Live Feed</span></div>
+            </div>
+            <div class="source-card fade-up-5">
+              <div class="source-card-top"><div class="source-card-icon">📱</div><span class="badge badge-info">Social</span></div>
+              <h4>Telegram Public Channels</h4>
+              <p>Key origin point for health misinformation. We monitor 2,400+ public channels.</p>
+              <div class="source-card-footer"><span class="source-update">Updated: Hourly</span><span style="font-size:12px; color:var(--accent);">Monitored</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MISINFO ORIGIN SOURCES -->
+        <div class="source-category">
+          <div class="category-header fade-up">
+            <div class="category-icon" style="background:rgba(255,77,109,0.1);">⚠️</div>
+            <div>
+              <h2>Misinformation Origin Tracking</h2>
+              <p>Platforms where false science claims most frequently originate</p>
+            </div>
+          </div>
+
+          <div class="misinfo-sources fade-up-3">
+            <div class="misinfo-row">
+              <div class="misinfo-platform">🐦</div>
+              <div class="misinfo-name">Twitter/X</div>
+              <div class="misinfo-desc">Highest volume. Misinformation spreads fastest here due to retweet mechanics.</div>
+              <div class="misinfo-pct">38%</div>
+            </div>
+            <div class="misinfo-row">
+              <div class="misinfo-platform">📱</div>
+              <div class="misinfo-name">Telegram</div>
+              <div class="misinfo-desc">Origin point for most coordinated misinformation campaigns. Low moderation.</div>
+              <div class="misinfo-pct">27%</div>
+            </div>
+            <div class="misinfo-row">
+              <div class="misinfo-platform">📘</div>
+              <div class="misinfo-name">Facebook Groups</div>
+              <div class="misinfo-desc">Closed groups spread health misinformation to older demographics.</div>
+              <div class="misinfo-pct">19%</div>
+            </div>
+            <div class="misinfo-row">
+              <div class="misinfo-platform">📺</div>
+              <div class="misinfo-name">YouTube</div>
+              <div class="misinfo-desc">Long-form conspiracy content with high watch-time engagement.</div>
+              <div class="misinfo-pct">11%</div>
+            </div>
+            <div class="misinfo-row">
+              <div class="misinfo-platform">🌐</div>
+              <div class="misinfo-name">Fringe Websites</div>
+              <div class="misinfo-desc">Original sources for pseudoscientific content that then migrates to social media.</div>
+              <div class="misinfo-pct">5%</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer>
+      <p>SciCheck &copy; 2025 — Built for <span>Science Communication</span> · Big Data Analytics Assignment</p>
+    </footer>
+  </div>
+</body>
+</html>
